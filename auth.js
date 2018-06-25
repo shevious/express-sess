@@ -3,19 +3,6 @@
  * Return an error message if not, otherwise keep going :)
  */
 var passport = require("passport");  
-var passportJWT = require("passport-jwt");  
-
-var env       = process.env.NODE_ENV || 'development';
-var config    = require(__dirname + '/config/config.json')[env];
-
-var ExtractJwt = passportJWT.ExtractJwt;  
-var Strategy = passportJWT.Strategy;  
-var params = {  
-    secretOrKey: config.jwtSecret,
-    //jwtFromRequest: ExtractJwt.fromAuthHeader()
-    jwtFromRequest: ExtractJwt.fromUrlQueryParameter('access_token')
-};
-
 
 function isAuthenticated(req, res, next) {
     passport.authenticate('jwt', {session: false}, function(err, user, info) {
@@ -34,8 +21,7 @@ function isAuthenticated(req, res, next) {
       } else {
         // try check session auth
         if (req.isAuthenticated()) {
-          console.log('logged in using session!');
-          next();
+          next(); // success with session
         } else {
           res.status(403).json({
             error: "not authorized"
