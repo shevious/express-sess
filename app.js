@@ -42,7 +42,7 @@ app.use(session({
  secret: 'secret', //change secret
  store: myStore,
  resave: false,
- saveUninitialized: true
+ saveUninitialized: false
 }));
 myStore.sync();
 

@@ -13,11 +13,11 @@ function isAuthenticated(req, res, next) {
         /* session login
         req.logIn(user, function(err) {
           if (err) return next(err);
-          next();
+          return next();
         });
         */
         req.user = user;
-        next();
+        return next();
       } else {
         // try check session auth
         if (req.isAuthenticated()) {
