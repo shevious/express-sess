@@ -18,6 +18,10 @@ router.post('/', function(req, res, next) {
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
+      if (!req.isAuthenticated()) {
+         console.log('###################');
+         console.log('not logged in yet!!!!!!')
+      }
       return res.redirect('/');
     });
   })(req, res, next);

@@ -36,12 +36,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 var myStore = new SequelizeStore({
-    db: sequelize
+    db: sequelize,
+    // The interval at which to cleanup expired sessions in milliseconds.
+    //checkExpirationInterval: 1000,
+    //expiration: 60 * 1000  // The maximum age (in milliseconds) of a valid session.
 })
 app.use(session({
  secret: 'secret', //change secret
  store: myStore,
- resave: false,
+ resave: true,
+ rolling: true,
+ cookie: {maxAge: 20000},
  saveUninitialized: false
 }));
 myStore.sync();
@@ -94,7 +99,8 @@ app.use('/api', apiRouter);
 app.get('/secret', auth.isAuthenticated, function(req, res) {
   if (req.isAuthenticated()) {
     res.render('secret', {
-      user: JSON.stringify(req.user)
+      user: JSON.stringify(req.user),
+      sess: req.session.cookie.maxAge / 1000
     });
   } else {
     res.redirect('/');
